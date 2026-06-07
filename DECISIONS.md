@@ -1,5 +1,12 @@
 # DECISIONS.md — Vouch Night-Shift Handover Service
 
+**What this is, in one line:** an automated, trustworthy version of the night-shift
+handover Vouch assembles by hand today — so a morning manager learns what to act
+on first within 60 seconds, consistently, across every hotel, every night.
+
+Each section below opens with a short **product view** (what it means for the
+manager and the business) followed by how it actually works.
+
 ## Deliverables
 
 - **Repo:** https://github.com/ramadika/vouch-builder-test (full history, no squash)
@@ -21,6 +28,15 @@ curl -s -X POST https://vouch-builder-test-production.up.railway.app/handover \
 ---
 
 ## What I built, and what I deliberately skipped
+
+> **The product view:** A morning manager opens one link and, within a minute,
+> knows what needs them — what's on fire, what's pending, what's just for
+> awareness — instead of scrolling a raw event log or waiting on a hand-typed
+> summary of inconsistent quality. The service turns two messy inputs (the
+> system's structured feed, plus whatever the relief staffer typed by hand, in
+> whatever language) into one briefing a manager can act on. I built the full
+> path that does exactly that, and deliberately left out anything not needed to
+> prove it works within the two-hour window.
 
 **Built** — a stateless `POST /handover` service that ingests both input formats,
 reconciles issues across nights, and returns an **action-first HTML handover**
@@ -55,6 +71,14 @@ which flags, duration) so a bad handover is debuggable in production.
 
 ## How I handle reconciliation across nights
 
+> **The product view:** Hotel problems don't respect calendar days — an aircon
+> outage opened Monday can still be open Friday, and a single shift runs across
+> midnight. A manager shouldn't have to re-read the same open items every
+> morning; they want to see what's **new tonight**, what's **still dragging on**,
+> and what **got fixed overnight**. So the service tracks each issue as one
+> thread that persists across nights, rather than re-listing raw events from
+> scratch each day.
+
 A night shift runs ~23:00–07:00 and spans two calendar dates, so every event is
 bucketed to the **morning it hands over on** (`shiftDateFor`): events at/after
 23:00 belong to the next day's morning, everything else to the same day. The
@@ -83,6 +107,14 @@ is still meaningful, and logs both the requested and effective date.
 ---
 
 ## How I keep every statement grounded (and stop the model inventing facts)
+
+> **The product view:** This runs unattended across hundreds of hotels, so a
+> manager has to trust it without re-checking the source. The promise is simple:
+> never state anything the data doesn't support, and when two sources disagree or
+> something's missing, **say so loudly** rather than papering over it. A
+> confident-but-wrong handover is worse than none — it's how a guest gets charged
+> in error or a compliance deadline slips. Trust is the whole product here, so I
+> enforced it in the architecture, not just by asking the model nicely.
 
 Grounding is enforced by **architecture, not just prompting** — the model's two
 jobs are deliberately narrow:
@@ -137,6 +169,13 @@ and the deterministic reconcile step. Rule #5 was updated to reflect this.
 
 ## Where AI helped most, and where it got in the way
 
+> **The product view:** AI earns its place where the input is genuinely messy and
+> human — reading a tired relief staffer's half-Mandarin, half-English note. It
+> becomes a liability the moment it's trusted to **judge** (deciding what's
+> resolved, or quietly smoothing over a contradiction). So the design lets the
+> model *read and write*, but never *decide* — that's reserved for code a human
+> can audit.
+
 **Helped most:** the messy, multilingual free-text parse. The Wed night log mixes
 English and Mandarin ("312 那个 no-show… 我已经按 booking terms 帮他收了一晚的费用了"),
 abbreviations, and a prose ramble. Hand-writing a parser for that is brittle;
@@ -154,6 +193,11 @@ across hundreds of hotels.
 
 ## What I'd do in hours 3–6
 
+> **The product view:** The next increments are about making it dependable at
+> scale — real memory of each issue's history, hard compliance countdowns instead
+> of soft flags, and delivering the briefing where managers already are (Slack/
+> email at 7am) rather than waiting for them to pull it.
+
 - **Postgres `issue_threads` table** — materialise thread state so a thread's
   history isn't re-derived every call, and "carried over since Monday" is real.
 - **Compliance deadline calculator** — actual countdown from check-in vs the
@@ -168,6 +212,9 @@ across hundreds of hotels.
 ---
 
 ## One thing that surprised me
+
+> **The product view:** The most valuable feature turned out not to be the tidy
+> summary — it's the service's willingness to **refuse to guess**.
 
 The contradictions are the *signal*, not noise. My first instinct was to treat
 the JSON-vs-free-text disagreement on the 312 no-show as a data-quality bug to
