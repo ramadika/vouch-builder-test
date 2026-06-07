@@ -162,49 +162,54 @@ To trace a specific claim in the handover back to its source:
 Work through these in order. Each block should be a clean commit.
 
 ### 🏗️ Phase 1 — Project scaffold
-- [ ] `npm init` + install dependencies: `hono`, `@hono/node-server`, `@anthropic-ai/sdk`, `pino`, `zod`, `tsx`
-- [ ] `tsconfig.json` (ESNext, strict mode)
-- [ ] `package.json` scripts: `dev` (tsx watch), `build` (tsc), `start` (node dist)
-- [ ] `.env.example` with `ANTHROPIC_API_KEY`, `PORT`, `LOG_LEVEL`
-- [ ] `.gitignore` (`node_modules`, `.env`, `dist`)
-- [ ] Copy `data/events.json` and `data/night-logs.md` into repo
+- [x] `npm init` + install dependencies: `hono`, `@hono/node-server`, `@anthropic-ai/sdk`, `pino`, `zod`, `tsx`
+- [x] `tsconfig.json` (ESNext, strict mode)
+- [x] `package.json` scripts: `dev` (tsx watch), `build` (tsc), `start` (node dist)
+- [x] `.env.example` with `ANTHROPIC_API_KEY`, `PORT`, `LOG_LEVEL`
+- [x] `.gitignore` (`node_modules`, `.env`, `dist`)
+- [x] Copy `data/events.json` and `data/night-logs.md` into repo
 
 ### 🔌 Phase 2 — Server + endpoint
-- [ ] `src/index.ts` — Hono app, `POST /handover` route
-- [ ] Request body validation with Zod: `hotelId`, `shiftDate`, `eventsJson`, `nightLogMd` (optional)
-- [ ] `GET /health` → `{ status: "ok" }` (Railway needs this)
-- [ ] Structured logging with `pino` — log at each pipeline step (see log shape in Debugging section above)
-- [ ] Return HTML by default; JSON if `Accept: application/json`
-- [ ] Error handling: parse errors → 400, Claude API errors → 502, both with structured log
+- [x] `src/index.ts` — Hono app, `POST /handover` route
+- [x] Request body validation with Zod: `hotelId`, `shiftDate`, `eventsJson`, `nightLogMd` (optional)
+- [x] `GET /health` → `{ status: "ok" }` (Railway needs this)
+- [x] Structured logging with `pino` — log at each pipeline step (see log shape in Debugging section above)
+- [x] Return HTML by default; JSON if `Accept: application/json`
+- [x] Error handling: parse errors → 400, Claude API errors → 502, both with structured log
 
 ### 🔄 Phase 3 — Pipeline wiring
-- [ ] `src/normalise.ts` — convert `events.json` events into `NormalizedEvent[]` (deterministic, no model)
-- [ ] Wire `parseNightLog()` from `prompts.ts` — call only if `nightLogMd` is provided
-- [ ] Merge JSON events + parsed free-text events into single array
-- [ ] Wire `reconcileThreads()` from `reconcile.ts`
-- [ ] Wire `generateHandover()` from `prompts.ts`
-- [ ] Log thread list before handover generation (for production debugging)
+- [x] `src/normalise.ts` — convert `events.json` events into `NormalizedEvent[]` (deterministic, no model)
+- [x] Wire `parseNightLog()` from `prompts.ts` — call only if `nightLogMd` is provided
+- [x] Merge JSON events + parsed free-text events into single array
+- [x] Wire `reconcileThreads()` from `reconcile.ts`
+- [x] Wire `generateHandover()` from `prompts.ts`
+- [x] Log thread list before handover generation (for production debugging)
 
 ### 🎨 Phase 4 — HTML output
-- [ ] Wrap generated HTML in a full page shell: `<html>`, `<head>` with minimal CSS, `<body>`
-- [ ] CSS: readable font, clear section colours (red for fire, amber for pending, green for resolved)
-- [ ] Make flags visually distinct — orange pill or red border
-- [ ] Source event IDs in small grey text under each item (traceability)
-- [ ] Hotel name + shift date in the page `<title>` and header
+- [x] Wrap generated HTML in a full page shell: `<html>`, `<head>` with minimal CSS, `<body>` (`src/html.ts`)
+- [x] CSS: readable font, clear section colours (red for fire, amber for pending, green for resolved)
+- [x] Make flags visually distinct — orange pill or red border
+- [x] Source event IDs in small grey text under each item (traceability)
+- [x] Hotel name + shift date in the page `<title>` and header
 
 ### 🚀 Phase 5 — Deploy to Railway
-- [ ] Push repo to GitHub (full commit history, no squash)
-- [ ] Create new Railway project → "Deploy from GitHub repo"
-- [ ] Set env var: `ANTHROPIC_API_KEY` in Railway dashboard
-- [ ] Verify `GET /health` returns 200
-- [ ] Run the sample `curl` command against the deployed URL
-- [ ] Paste the Railway URL into `DECISIONS.md` deliverables section
+- [x] Push repo to GitHub (full commit history, no squash)
+- [x] Create new Railway project → "Deploy from GitHub repo"
+- [x] Set env var: `ANTHROPIC_API_KEY` in Railway dashboard
+- [x] Verify `GET /health` returns 200
+- [x] Run the sample `curl` command against the deployed URL
+- [x] Paste the Railway URL into `DECISIONS.md` deliverables section
 
 ### ✅ Phase 6 — Submission prep
-- [ ] Final `DECISIONS.md` pass — fill in deployed URL, confirm all 5 questions answered
+- [x] Final `DECISIONS.md` pass — fill in deployed URL, confirm all 5 questions answered
 - [ ] Export one AI conversation (this session or a debugging session) as the required artifact
-- [ ] `README.md` with: what it is, how to run locally, sample curl command
-- [ ] Final git push, check commit history looks clean
+- [x] `README.md` with: what it is, how to run locally, sample curl command
+- [x] Final git push, check commit history looks clean
+
+> Status: built, deployed, and verified end-to-end on `claude-sonnet-4-6`. Only
+> remaining item is exporting this AI session as the required submission artifact.
+> Also added beyond the checklist: `scripts/verify-core.ts` (offline smoke test
+> asserting the grounding flags fire without an API key).
 
 ---
 
