@@ -2,9 +2,21 @@
 
 ## Deliverables
 
-- **Repo:** _(GitHub link — push with full history, no squash)_
-- **Deployed URL:** _(Railway URL — set `ANTHROPIC_API_KEY` in the dashboard, then paste here)_
+- **Repo:** https://github.com/ramadika/vouch-builder-test (full history, no squash)
+- **Deployed URL:** https://vouch-builder-test-production.up.railway.app
+  (`GET /health` → `{"status":"ok"}`; `POST /handover` for the report)
 - **Sample curl:** see `README.md` (and the `## Sample curl` block in `CLAUDE.md`).
+
+```bash
+curl -s -X POST https://vouch-builder-test-production.up.railway.app/handover \
+  -H "Content-Type: application/json" \
+  -d '{
+    "hotelId": "lumen-sg",
+    "shiftDate": "2026-05-30",
+    "eventsJson": '"$(cat data/events.json)"',
+    "nightLogMd": '"$(cat data/night-logs.md | jq -Rs .)"'
+  }' | open -f -a Safari
+```
 
 ---
 
