@@ -1,11 +1,18 @@
 # Vouch Night-Shift Handover Service
 
-Generates **action-first night-shift handover reports** for hotel morning
-managers. It ingests a hotel's structured front-desk events **and** a free-text,
-possibly multilingual night log, reconciles issues across nights, and returns an
-HTML handover (or JSON) that tells the manager within 60 seconds what's on fire,
-what's pending, and what's just FYI — with every statement traceable to its
-source and contradictions flagged rather than smoothed over.
+**The problem.** When the night shift ends at 7am, the morning team needs to know
+what happened overnight and — more importantly — **what to act on first**. Today
+those handovers are assembled by hand and the quality is inconsistent. This
+service does it automatically and reliably, for every hotel, every night.
+
+**What it does.** It takes a hotel's structured front-desk events **and** the
+free-text, possibly multilingual note a relief staffer left behind, and turns
+them into one **action-first briefing** a manager can absorb in 60 seconds — what's
+on fire, what's pending, what's just FYI. It tracks each issue across nights (new
+tonight vs. still open vs. resolved overnight) and, crucially, **flags anything
+contradictory or incomplete instead of smoothing it over** — because it runs
+unattended across many hotels, so the manager has to be able to trust it without
+double-checking. Every line is traceable back to its source event.
 
 - **Endpoint:** `POST /handover` (HTML by default; JSON with `Accept: application/json`)
 - **Health:** `GET /health` → `{ "status": "ok" }`
