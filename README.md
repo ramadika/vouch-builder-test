@@ -59,7 +59,8 @@ injection).
 
 ## Sample curl
 
-HTML, opened in the browser:
+HTML, saved and opened in the browser. Save to a **`.html`** file so the browser
+renders it (piping into `open -f` writes a `.txt` temp file that shows raw source):
 
 ```bash
 curl -s -X POST http://localhost:3000/handover \
@@ -69,8 +70,11 @@ curl -s -X POST http://localhost:3000/handover \
     "shiftDate": "2026-05-30",
     "eventsJson": '"$(cat data/events.json)"',
     "nightLogMd": '"$(cat data/night-logs.md | jq -Rs .)"'
-  }' | open -f -a Safari
+  }' -o handover.html && open handover.html
 ```
+
+Against the deployed service, swap the URL for
+`https://vouch-builder-test-production.up.railway.app/handover`.
 
 JSON (threads + flags + rendered HTML) for a frontend:
 

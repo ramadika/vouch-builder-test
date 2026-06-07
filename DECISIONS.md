@@ -15,7 +15,7 @@ curl -s -X POST https://vouch-builder-test-production.up.railway.app/handover \
     "shiftDate": "2026-05-30",
     "eventsJson": '"$(cat data/events.json)"',
     "nightLogMd": '"$(cat data/night-logs.md | jq -Rs .)"'
-  }' | open -f -a Safari
+  }' -o handover.html && open handover.html   # save as .html so the browser renders it
 ```
 
 ---
