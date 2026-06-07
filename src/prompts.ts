@@ -1,8 +1,10 @@
 // The two Claude calls + their prompts.
 //
-// Model: claude-opus-4-8 with adaptive thinking. Note: Opus 4.7/4.8 removed the
-// `temperature` parameter (sending it 400s), so CLAUDE.md grounding rule #5's
-// "temperature 0" is unsettable on this model. Determinism instead comes from:
+// Model: claude-sonnet-4-6 with adaptive thinking — a cheaper, fast, capable fit
+// for "hundreds of hotels" unattended (parse + grounded generation). We do not
+// rely on `temperature` for determinism (current Anthropic models with adaptive
+// thinking don't take it; Opus 4.7/4.8 remove it entirely). Determinism instead
+// comes from:
 //   - the parser using structured outputs (a fixed JSON schema — the model
 //     cannot emit fields outside it),
 //   - tight, grounding-first system prompts,
@@ -18,7 +20,7 @@ import type {
   ParsedEvent,
 } from "./types.js";
 
-const MODEL = "claude-opus-4-8";
+const MODEL = "claude-sonnet-4-6";
 
 // Lazily constructed so the server (and /health) boots even without a key set;
 // only /handover needs it. Reads ANTHROPIC_API_KEY from env.

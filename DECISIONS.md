@@ -111,12 +111,15 @@ jobs are deliberately narrow:
    instructions, and the generator surfaces it as a flagged `guest_message` that
    was *filed for review* — never acted on.
 
-### On `temperature: 0` (CLAUDE.md rule #5)
-The rule wanted `temperature: 0` for determinism. The chosen model
-`claude-opus-4-8` **removed sampling parameters** — passing `temperature` 400s —
-so it can't be set. The determinism goal is met by the structured-output schema,
-the grounding prompts, and the deterministic reconcile step instead. Rule #5 was
-updated to reflect this. (If a `temperature`-supporting model were used, set 0.)
+### On model choice + `temperature: 0` (CLAUDE.md rule #5)
+The service runs **`claude-sonnet-4-6`** with adaptive thinking — a cheaper,
+fast, capable fit for running unattended across many hotels (the model is a
+single `MODEL` constant in `src/prompts.ts`, trivially swappable to Opus for
+maximum capability). Rule #5 wanted `temperature: 0` for determinism; we don't
+set `temperature` (adaptive-thinking models don't take a custom value, and the
+newest Opus models remove the parameter outright). The determinism goal is met
+instead by the structured-output schema on the parser, the grounding prompts,
+and the deterministic reconcile step. Rule #5 was updated to reflect this.
 
 ---
 
