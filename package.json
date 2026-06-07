@@ -1,0 +1,28 @@
+{
+  "name": "vouch-handover-service",
+  "version": "1.0.0",
+  "description": "Action-first night-shift handover reports for hotel morning managers",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.102.0",
+    "@hono/node-server": "^1.13.7",
+    "hono": "^4.6.14",
+    "pino": "^9.5.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "pino-pretty": "^13.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
